@@ -1,4 +1,6 @@
-# KaHyPar
+# KaHyPar.jl
+
+A Julia interface to the [KaHyPar](https://github.com/SebastianSchlag/kahypar) hypergraph partitioning package. 
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://jalving.github.io/KaHyPar.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://jalving.github.io/KaHyPar.jl/dev)
