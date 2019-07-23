@@ -4,20 +4,21 @@ using SparseArrays
 using LinearAlgebra
 using Libdl
 
-# Load libkahypar with BinaryProvider
-# __init__() = check_deps()
-# let depsfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
-#     if isfile(depsfile)
-#         include(depsfile)
-#     else
-#         error("$(depsfile) does not exist, Please re-run Pkg.build(\"KaHyPar\"), and restart Julia.")
-#     end
-# end
+#Load libkahypar with BinaryProvider
+__init__() = check_deps()
+let depsfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
+    if isfile(depsfile)
+        include(depsfile)
+    else
+        error("$(depsfile) does not exist, Please re-run Pkg.build(\"KaHyPar\"), and restart Julia.")
+    end
+end
 
-const libkahypar = "/home/jordan/git/kahypar/build/lib/libkahypar.so"
-const default_options_file = "/home/jordan/git/kahypar/config/km1_direct_kway_sea17.ini"
+const default_config_file = "config/cut_kahypar_mf_jea19.ini"
+# const libkahypar = "/home/jordan/git/kahypar/build/lib/libkahypar.so"
+# const default_options_file = "/home/jordan/git/kahypar/config/km1_direct_kway_sea17.ini"
 
-# KaHyParC API
+# KaHyPar C API
 include("kahypar_h.jl")
 
 # Julia interface
@@ -33,8 +34,8 @@ mutable struct HyperGraph
     v_weights::Vector{kahypar_hypernode_weight_t}
     e_weights::Vector{kahypar_hyperedge_weight_t}
 
-    HyperGraph(context,n_vertices, edge_indices,hyperedges) = new(C_NULL,n_vertices, edge_indices,hyperedges,kahypar_hypernode_id_t.(ones(n_vertices)),kahypar_hyperedge_id_t.(ones(length(edge_indices) - 1)))
-    HyperGraph(context,n_vertices, edge_indices,hyperedges,vertex_weights,edge_weights) = new(C_NULL,n_vertices,edge_indices,hyperedges,vertex_weights,edge_weights)
+    HyperGraph(n_vertices, edge_indices,hyperedges) = new(kahypar_context_new(),n_vertices, edge_indices,hyperedges,kahypar_hypernode_id_t.(ones(n_vertices)),kahypar_hyperedge_id_t.(ones(length(edge_indices) - 1)))
+    HyperGraph(n_vertices, edge_indices,hyperedges,vertex_weights,edge_weights) = new(kahypar_context_new(),n_vertices,edge_indices,hyperedges,vertex_weights,edge_weights)
 end
 
 """
@@ -72,15 +73,22 @@ partition(H, kparts; options_file = default_options_file) = partition(hypergraph
 
 
 #Simple partition wrapper.  We create a new context, load the file, partition the hypergraph, and free the context.
-function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, options_file::String = default_options_file)
+function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03; configuration::Union{Symbol,String} = default_configuration)
 
     objective = Cint(0)
-
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
     num_hyperedges = kahypar_hyperedge_id_t(length(H.edge_indices) - 1)
 
-    H.context = kahypar_context_new()
-    kahypar_configure_context_from_file(H.context,options_file)
+    if configuration == :edge_cut
+        config_file = "config/cut_kahypar_mf_jea19.ini"
+    elseif configuration = :connectivity
+        config_file = "config/km1_kahypar_mf_jea19.ini"
+    else
+        config_file = configuration
+    end
+
+    #H.context = kahypar_context_new()
+    kahypar_configure_context_from_file(H.context,config_file)
     kahypar_partition(H.n_vertices, num_hyperedges, Cdouble(imbalance), kahypar_partition_id_t(kparts),
                                H.v_weights, H.e_weights, H.edge_indices,
                                H.hyperedges, objective, H.context, parts)
