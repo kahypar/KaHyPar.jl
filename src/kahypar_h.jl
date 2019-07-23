@@ -30,11 +30,6 @@ function kahypar_context_free(context::Ref{kahypar_context_t})
     context)
 end
 
-# #Perform kahypar partitioning given hypergraph information
-# function kahypar_partition(num_vertices::kahypar_hypernode_id_t, num_hyperedges::kahypar_hyperedge_id_t, imbalance::Cdouble, num_blocks::kahypar_partition_id_t,
-#                            vertex_weights::Vector{kahypar_hypernode_weight_t}, hyperedge_weights::Vector{kahypar_hyperedge_weight_t}, hyperedge_indices::Vector{Csize_t},
-#                            hyperedges::Vector{kahypar_hyperedge_id_t},objective::Cint, context, partition::Vector{kahypar_partition_id_t})
-
 #Perform kahypar partitioning given hypergraph information
 function kahypar_partition(num_vertices, num_hyperedges, imbalance, num_blocks,
                           vertex_weights, hyperedge_weights, hyperedge_indices,

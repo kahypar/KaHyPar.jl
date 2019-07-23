@@ -81,7 +81,7 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03; con
 
     if configuration == :edge_cut
         config_file = "config/cut_kahypar_mf_jea19.ini"
-    elseif configuration = :connectivity
+    elseif configuration == :connectivity
         config_file = "config/km1_kahypar_mf_jea19.ini"
     else
         config_file = configuration

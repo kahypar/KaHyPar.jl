@@ -10,3 +10,7 @@ V = Int.(ones(length(I)))
 A = sparse(I,J,V)
 
 h = KaHyPar.hypergraph(A)
+
+KaHyPar.partition(h,2)
+
+true
