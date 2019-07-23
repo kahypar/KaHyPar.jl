@@ -2,5 +2,5 @@ using KaHyPar
 using Test
 
 @testset "KaHyPar.jl" begin
-    # Write your own tests here.
+    include("simple_test.jl")
 end

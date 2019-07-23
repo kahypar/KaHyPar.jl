@@ -16,5 +16,5 @@ KaHyPar.jl is a Julia interface to the [KaHyPar](https://github.com/SebastianSch
 
 ```julia
 using Pkg
-Pkg.add("KaHyPar.jl")
+Pkg.add("https://github.com/jalving/KaHyPar.jl.git")
 ```
