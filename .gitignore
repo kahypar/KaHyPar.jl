@@ -6,3 +6,9 @@
 /dev/
 /docs/build/
 /docs/site/
+
+deps/usr/
+
+deps/deps\.jl
+
+deps/build\.log

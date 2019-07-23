@@ -14,9 +14,7 @@ let depsfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
     end
 end
 
-const default_config_file = "config/cut_kahypar_mf_jea19.ini"
-# const libkahypar = "/home/jordan/git/kahypar/build/lib/libkahypar.so"
-# const default_options_file = "/home/jordan/git/kahypar/config/km1_direct_kway_sea17.ini"
+const default_configuration = "config/cut_kahypar_mf_jea19.ini"
 
 # KaHyPar C API
 include("kahypar_h.jl")
@@ -61,7 +59,7 @@ function hypergraph(A::SparseMatrixCSC)
     end
     resize!(hyperedges, hyperedge_i)
 
-    return HyperGraph(C_NULL,kahypar_hypernode_id_t(N_v), edge_indices, hyperedges)
+    return HyperGraph(kahypar_hypernode_id_t(N_v), edge_indices, hyperedges)
 end
 
 
@@ -73,7 +71,7 @@ partition(H, kparts; options_file = default_options_file) = partition(hypergraph
 
 
 #Simple partition wrapper.  We create a new context, load the file, partition the hypergraph, and free the context.
-function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03; configuration::Union{Symbol,String} = default_configuration)
+function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, configuration::Union{Symbol,String} = default_configuration)
 
     objective = Cint(0)
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
