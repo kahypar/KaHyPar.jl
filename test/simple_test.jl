@@ -1,5 +1,3 @@
-using Pkg
-Pkg.activate("../")
 using KaHyPar
 using SparseArrays
 
@@ -11,6 +9,8 @@ A = sparse(I,J,V)
 
 h = KaHyPar.hypergraph(A)
 
-KaHyPar.partition(h,2)
+KaHyPar.partition(h,2,configuration = :edge_cut)
+
+KaHyPar.partition(h,2,configuration = :connectivity)
 
 true

@@ -14,7 +14,7 @@ let depsfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
     end
 end
 
-const default_configuration = "config/cut_kahypar_mf_jea19.ini"
+const default_configuration = joinpath(@__DIR__,"config/cut_kahypar_mf_jea19.ini")
 
 # KaHyPar C API
 include("kahypar_h.jl")
@@ -77,10 +77,14 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, con
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
     num_hyperedges = kahypar_hyperedge_id_t(length(H.edge_indices) - 1)
 
-    if configuration == :edge_cut
-        config_file = "config/cut_kahypar_mf_jea19.ini"
-    elseif configuration == :connectivity
-        config_file = "config/km1_kahypar_mf_jea19.ini"
+    if isa(configuration,Symbol)
+        if configuration == :edge_cut
+            config_file =  joinpath(@__DIR__ ,"config/cut_kahypar_mf_jea19.ini")
+        elseif configuration == :connectivity
+            config_file =  joinpath(@__DIR__ ,"config/km1_kahypar_mf_jea19.ini")
+        else
+            error("Unsupported configuration option given")
+        end
     else
         config_file = configuration
     end
