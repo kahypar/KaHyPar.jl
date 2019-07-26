@@ -67,7 +67,7 @@ end
     KaHyPar.partition(H, kparts; options_file = "")
     Partition the hypergraph `H` in `k` parts.  Returns a partition vector
 """
-partition(H, kparts; options_file = default_options_file) = partition(hypergraph(H), kparts, options_file = default_options_file)
+partition(H, kparts; configuration = default_configuration) = partition(hypergraph(H), kparts, configuration = configuration)
 
 
 #Simple partition wrapper.  We create a new context, load the file, partition the hypergraph, and free the context.
