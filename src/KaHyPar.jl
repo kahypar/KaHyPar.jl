@@ -32,8 +32,8 @@ mutable struct HyperGraph
     v_weights::Vector{kahypar_hypernode_weight_t}
     e_weights::Vector{kahypar_hyperedge_weight_t}
 
-    HyperGraph(n_vertices, edge_indices,hyperedges) = new(kahypar_context_new(),n_vertices, edge_indices,hyperedges,kahypar_hypernode_id_t.(ones(n_vertices)),kahypar_hyperedge_id_t.(ones(length(edge_indices) - 1)))
-    #HyperGraph(n_vertices, edge_indices,hyperedges,vertex_weights,edge_weights) = new(kahypar_context_new(),n_vertices,edge_indices,hyperedges,vertex_weights,edge_weights)
+    HyperGraph(n_vertices,edge_indices,hyperedges) = new(kahypar_context_new(),n_vertices,edge_indices,hyperedges,kahypar_hypernode_id_t.(ones(n_vertices)),kahypar_hyperedge_id_t.(ones(length(edge_indices) - 1)))
+    HyperGraph(n_vertices, edge_indices,hyperedges,vertex_weights,edge_weights) = new(kahypar_context_new(),n_vertices,edge_indices,hyperedges,vertex_weights,edge_weights)
 end
 
 """
@@ -68,8 +68,8 @@ function hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weight
     graph.e_weights = Cint.(edge_weights)
     return graph
 end
-HyperGraph(A::SparseMatrixCSC) = hypergraph(A)
-HyperGraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weights::Vector{Int64}) = hypergraph(A,vertex_weights,edge_weights)
+#HyperGraph(A::SparseMatrixCSC) = hypergraph(A)
+#HyperGraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weights::Vector{Int64}) = hypergraph(A,vertex_weights,edge_weights)
 
 
 
