@@ -61,13 +61,22 @@ function hypergraph(A::SparseMatrixCSC)
 
     return HyperGraph(kahypar_hypernode_id_t(N_v), edge_indices, hyperedges)
 end
+function hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{kahypar_hypernode_weight_t},edge_weights::Vector{kahypar_hyperedge_weight_t})
+    hypergraph = hypergraph(A)
+    hypergraph.v_weights = vertex_weights
+    hypergraph.e_weights = edge_weights
+    return hypergraph
+end
+HyperGraph(A::SparseMatrixCSC) = hypergraph(A)
+Hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{kahypar_hypernode_weight_t},edge_weights::Vector{kahypar_hyperedge_weight_t}) = hypergraph(A,vertex_weights,edge_weights)
+
 
 
 """
     KaHyPar.partition(H, kparts; options_file = "")
     Partition the hypergraph `H` in `k` parts.  Returns a partition vector
 """
-partition(H, kparts; configuration = default_configuration) = partition(hypergraph(H), kparts, configuration = configuration)
+partition(H, kparts;imbalance = 0.03, configuration = default_configuration) = partition(hypergraph(H), kparts,imbalance = imbalance, configuration = configuration)
 
 
 #Simple partition wrapper.  We create a new context, load the file, partition the hypergraph, and free the context.
