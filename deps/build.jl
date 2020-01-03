@@ -4,15 +4,12 @@ using Libdl
 # Parse some basic command-line arguments
 const verbose = "--verbose" in ARGS
 const prefix = Prefix(get([a for a in ARGS if a != "--verbose"], 1, joinpath(@__DIR__, "usr")))
+
 products = [
     LibraryProduct(prefix.path*"/boost/lib",["libboost_program_options"], :libboost_program_options),
     LibraryProduct(prefix.path*"/lib64", ["libkahypar"], :libkahypar)
 ]
 
-
-# function update_product(product::LibraryProduct, library_path, binary_path)
-#     LibraryProduct(library_path, product.libnames, product.variable_name)
-# end
 #Download binaries from hosted location
 bin_prefix = "https://github.com/jalving/KaHyParBuilder/releases/download/v0.1.0/"
 
@@ -21,26 +18,43 @@ download_info = Dict(
     Linux(:x86_64, libc=:glibc, compiler_abi=CompilerABI(:gcc7)) => ("$bin_prefix/KaHyPar.v0.1.0.x86_64-linux-gnu-gcc7.tar.gz", "67055abc00aab8a3c94907109a0ba9f1db960c1828a7e334233c30972bf227db"),
 )
 
-# Install unsatisfied or updated dependencies:
-unsatisfied = any(!satisfied(p; verbose=verbose) for p in products)
-dl_info = choose_download(download_info, platform_key_abi())
-if dl_info === nothing && unsatisfied
-    # If we don't have a compatible .tar.gz to download, complain.
-    # Alternatively, you could attempt to install from a separate provider,
-    # build from source or something even more ambitious here.
-    error("Your platform (\"$(Sys.MACHINE)\", parsed as \"$(triplet(platform_key_abi()))\") is not supported by this package!")
+# function update_product(product::LibraryProduct, library_path, binary_path)
+#     LibraryProduct(library_path, product.libnames, product.variable_name)
+# end
+
+custom_library = false
+if haskey(ENV,"JULIA_KAHYPAR_LIBRARY_PATH")
+    custom_products = [LibraryProduct(ENV["JULIA_KAHYPAR_LIBRARY_PATH"],["libkahypar"], :libkahypar)]
+    if all(satisfied(p; verbose=verbose) for p in custom_products)
+        products = custom_products
+        custom_library = true
+    else
+        error("Could not install custom libraries from $(ENV["JULIA_KAHYPAR_LIBRARY_PATH"]) .\n To fall back to BinaryProvider call delete!(ENV,\"JULIA_KAHYPAR_LIBRARY_PATH\") and run build again.")
+    end
 end
 
-# If we have a download, and we are unsatisfied (or the version we're
-# trying to install is not itself installed) then load it up!
-if unsatisfied || !isinstalled(dl_info...; prefix=prefix)
-    # Download and install binaries
-    install(dl_info...; prefix=prefix, force=true, verbose=verbose)
-end
+#Download from repo
+if !custom_library
+    # Install unsatisfied or updated dependencies:
+    unsatisfied = any(!satisfied(p; verbose=verbose) for p in products)
+    dl_info = choose_download(download_info, platform_key_abi())
+    if dl_info === nothing && unsatisfied
+        # If we don't have a compatible .tar.gz to download, complain.
+        # Alternatively, you could attempt to install from a separate provider,
+        # build from source or something even more ambitious here.
+        error("Your platform (\"$(Sys.MACHINE)\", parsed as \"$(triplet(platform_key_abi()))\") is not supported by this package!")
+    end
 
-#It won't seem to open libkahypar unless the program options library is opened first
-boost_p = products[1]
-dlopen_e(boost_p.dir_path*"/libboost_program_options.so")
+    # If we have a download, and we are unsatisfied (or the version we're
+    # trying to install is not itself installed) then load it up!
+    if unsatisfied || !isinstalled(dl_info...; prefix=prefix)
+        # Download and install binaries
+        install(dl_info...; prefix=prefix, force=true, verbose=verbose)
+    end
+    #It won't seem to open libkahypar unless the program options library is opened first
+    boost_p = products[1]
+    dlopen_e(boost_p.dir_path*"/libboost_program_options.so")
+end
 
 #Open program options
 # Write out a deps.jl file that will contain mappings for our products

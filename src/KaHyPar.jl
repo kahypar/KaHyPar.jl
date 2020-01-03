@@ -62,7 +62,7 @@ function hypergraph(A::SparseMatrixCSC)
     return HyperGraph(kahypar_hypernode_id_t(N_v), edge_indices, hyperedges)
 end
 
-function hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{kahypar_hypernode_weight_t},edge_weights::Vector{kahypar_hyperedge_weight_t})
+function hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weights::Vector{Int64})
     graph = hypergraph(A)
     graph.v_weights = Cint.(vertex_weights)
     graph.e_weights = Cint.(edge_weights)
