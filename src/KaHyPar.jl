@@ -61,11 +61,12 @@ function hypergraph(A::SparseMatrixCSC)
 
     return HyperGraph(kahypar_hypernode_id_t(N_v), edge_indices, hyperedges)
 end
+
 function hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{kahypar_hypernode_weight_t},edge_weights::Vector{kahypar_hyperedge_weight_t})
-    hypergraph = hypergraph(A)
-    hypergraph.v_weights = vertex_weights
-    hypergraph.e_weights = edge_weights
-    return hypergraph
+    graph = hypergraph(A)
+    graph.v_weights = vertex_weights
+    graph.e_weights = edge_weights
+    return graph
 end
 HyperGraph(A::SparseMatrixCSC) = hypergraph(A)
 HyperGraph(A::SparseMatrixCSC,vertex_weights::Vector{kahypar_hypernode_weight_t},edge_weights::Vector{kahypar_hyperedge_weight_t}) = hypergraph(A,vertex_weights,edge_weights)
