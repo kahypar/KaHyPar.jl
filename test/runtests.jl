@@ -1,8 +1,12 @@
-using KaHyPar
 using Test
+using KaHyPar
 
-@testset "KaHyPar.jl" begin
-    include("simple_test.jl")
+println("running tests...")
 
-    include("weights.jl")
-end
+println("simple test...")
+
+@test include("simple_test.jl")
+
+println("testing weights...")
+
+@test include("weights.jl")
