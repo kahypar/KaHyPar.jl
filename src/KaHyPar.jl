@@ -68,10 +68,6 @@ function hypergraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weight
     graph.e_weights = Cint.(edge_weights)
     return graph
 end
-#HyperGraph(A::SparseMatrixCSC) = hypergraph(A)
-#HyperGraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weights::Vector{Int64}) = hypergraph(A,vertex_weights,edge_weights)
-
-
 
 """
     KaHyPar.partition(H, kparts; options_file = "")
@@ -109,5 +105,45 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, con
     return Int.(parts)  #typecast result back to julia Integer
 end
 
+function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vector;num_iterations::Int64 = 10, imbalance::Number = 0.03, configuration::Union{Symbol,String} = default_configuration)
+
+    objective = Cint(0)
+    parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
+    num_hyperedges = kahypar_hyperedge_id_t(length(H.edge_indices) - 1)
+
+    if isa(configuration,Symbol)
+        if configuration == :edge_cut
+            config_file =  joinpath(@__DIR__ ,"config/cut_kahypar_mf_jea19.ini")
+        elseif configuration == :connectivity
+            config_file =  joinpath(@__DIR__ ,"config/km1_kahypar_mf_jea19.ini")
+        else
+            error("Unsupported configuration option given")
+        end
+    else
+        config_file = configuration
+    end
+
+    #H.context = kahypar_context_new()
+    kahypar_configure_context_from_file(H.context,config_file)
+
+    kahypar_improve_partition(H.n_vertices, num_hyperedges, Cdouble(imbalance), kahypar_partition_id_t(kparts),
+                               H.v_weights, H.e_weights, H.edge_indices,
+                               H.hyperedges,input_partition,num_iterations,objective, H.context, parts)
+    #kahypar_context_free(context)
+
+    return Int.(parts)  #typecast result back to julia Integer
+end
+
+function set_target_block_weights(H::HyperGraph,block_weights::Vector{Int64})
+    @assert length(block_weights) <= H.n_vertices "Number of block weights ($(length(block_weights))) must be less than or equal to number of vertices ($(H.n_vertices)) "
+    @assert sum(block_weights) >= sum(H.v_weights) "Sum of individual part weights must be greater than sum of vertex weights"
+
+    n_blocks = kahypar_hypernode_id_t(length(block_weights))
+    block_weights = kahypar_hypernode_weight_t.(block_weights)
+
+    kahypar_set_custom_target_block_weights(n_blocks,block_weights,H.context)
+
+    return nothing
+end
 
 end # module

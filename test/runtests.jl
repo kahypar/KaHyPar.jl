@@ -3,10 +3,16 @@ using KaHyPar
 
 println("running tests...")
 
-println("simple test...")
+println("testing partition")
 
-@test include("simple_test.jl")
+@test include("test_partition.jl")
 
-println("testing weights...")
+println("testing weights")
 
-@test include("weights.jl")
+@test include("test_weights.jl")
+
+println("testing improve partition")
+@test include("test_improve_partition.jl")
+
+println("testing custom block weights")
+@test include("test_set_target_weights.jl")
