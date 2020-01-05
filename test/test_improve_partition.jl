@@ -11,6 +11,6 @@ h = KaHyPar.hypergraph(A)
 
 partition = KaHyPar.partition(h,2,configuration = :edge_cut)
 
-improved_partition = KaHyPar.improve_partition(h,2,partition,num_iterations = 2,configuration = :edge_cut)
+improved_partition = KaHyPar.improve_partition(h,2,partition,num_iterations = 1)
 
 true

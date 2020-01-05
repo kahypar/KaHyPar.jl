@@ -105,26 +105,12 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, con
     return Int.(parts)  #typecast result back to julia Integer
 end
 
-function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vector;num_iterations::Int64 = 10, imbalance::Number = 0.03, configuration::Union{Symbol,String} = default_configuration)
+function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vector;num_iterations::Int64 = 10, imbalance::Number = 0.03)
 
     objective = Cint(0)
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
     num_hyperedges = kahypar_hyperedge_id_t(length(H.edge_indices) - 1)
 
-    if isa(configuration,Symbol)
-        if configuration == :edge_cut
-            config_file =  joinpath(@__DIR__ ,"config/cut_kahypar_mf_jea19.ini")
-        elseif configuration == :connectivity
-            config_file =  joinpath(@__DIR__ ,"config/km1_kahypar_mf_jea19.ini")
-        else
-            error("Unsupported configuration option given")
-        end
-    else
-        config_file = configuration
-    end
-
-    #H.context = kahypar_context_new()
-    kahypar_configure_context_from_file(H.context,config_file)
 
     kahypar_improve_partition(H.n_vertices, num_hyperedges, Cdouble(imbalance), kahypar_partition_id_t(kparts),
                                H.v_weights, H.e_weights, H.edge_indices,
