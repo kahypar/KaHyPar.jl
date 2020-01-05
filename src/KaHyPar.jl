@@ -111,6 +111,7 @@ function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vect
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
     num_hyperedges = kahypar_hyperedge_id_t(length(H.edge_indices) - 1)
 
+    input_partition = kahypar_partition_id_t.(input_partition)
 
     kahypar_improve_partition(H.n_vertices, num_hyperedges, Cdouble(imbalance), kahypar_partition_id_t(kparts),
                                H.v_weights, H.e_weights, H.edge_indices,
