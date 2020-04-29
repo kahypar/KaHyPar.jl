@@ -58,4 +58,5 @@ end
 
 #Open program options
 # Write out a deps.jl file that will contain mappings for our products
-write_deps_file(joinpath(@__DIR__, "deps.jl"), products, verbose=verbose)
+#NOTE: isolate doesn't work because libboost needs to be open in this context to load kahypar
+write_deps_file(joinpath(@__DIR__, "deps.jl"), products, verbose=verbose,isolate = false)
