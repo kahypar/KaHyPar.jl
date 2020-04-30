@@ -53,7 +53,7 @@ if !custom_library
         # Download and install binaries
         install(dl_info...; prefix=prefix, force=true, verbose=verbose)
     end
-    #It won't seem to open libkahypar unless the program options library is opened first
+    #need to open libboost so KaHyPar will register as satisfied
     boost_p = products[1]
     dlopen_e(boost_p.dir_path*"/libboost_program_options.so")
 end
@@ -61,4 +61,4 @@ end
 #Open program options
 # Write out a deps.jl file that will contain mappings for our products
 #NOTE: isolate doesn't work because libboost needs to be open in this context to load kahypar
-write_deps_file(joinpath(@__DIR__, "deps.jl"), products, verbose=verbose)
+write_deps_file(joinpath(@__DIR__, "deps.jl"), products, verbose=verbose,isolate = false)
