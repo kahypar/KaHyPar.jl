@@ -18,13 +18,15 @@ download_info = Dict(
     Linux(:x86_64, libc=:glibc, compiler_abi=CompilerABI(:gcc7)) => ("$bin_prefix/KaHyPar.v0.1.0.x86_64-linux-gnu-gcc7.tar.gz", "67055abc00aab8a3c94907109a0ba9f1db960c1828a7e334233c30972bf227db"),
 )
 
-# function update_product(product::LibraryProduct, library_path, binary_path)
-#     LibraryProduct(library_path, product.libnames, product.variable_name)
-# end
-
 custom_library = false
 if haskey(ENV,"JULIA_KAHYPAR_LIBRARY_PATH")
     custom_products = [LibraryProduct(ENV["JULIA_KAHYPAR_LIBRARY_PATH"],["libkahypar"], :libkahypar)]
+    #NOTE:  need to be able to find libboost program options
+    poi = dlopen_e("libboost_program_options.so")
+    if poi == C_NULL
+        error("Could not find libboost_program_options.so")
+    end
+
     if all(satisfied(p; verbose=verbose) for p in custom_products)
         products = custom_products
         custom_library = true
@@ -59,4 +61,4 @@ end
 #Open program options
 # Write out a deps.jl file that will contain mappings for our products
 #NOTE: isolate doesn't work because libboost needs to be open in this context to load kahypar
-write_deps_file(joinpath(@__DIR__, "deps.jl"), products, verbose=verbose,isolate = false)
+write_deps_file(joinpath(@__DIR__, "deps.jl"), products, verbose=verbose)
