@@ -21,9 +21,9 @@ custom_library = false
 if haskey(ENV,"JULIA_KAHYPAR_LIBRARY_PATH")
     custom_products = [LibraryProduct(ENV["JULIA_KAHYPAR_LIBRARY_PATH"],["libkahypar"], :libkahypar)]
     #NOTE:  need to be able to find libboost program options
-    poi = dlopen_e("libboost_program_options.so")
+    poi = dlopen("libboost_program_options", throw_error=false)
     if poi == C_NULL
-        error("Could not find libboost_program_options.so")
+        error("Could not find the libboost_program_options library")
     end
 
     if all(satisfied(p; verbose=verbose) for p in custom_products)

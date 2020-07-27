@@ -18,3 +18,16 @@ using Pkg
 Pkg.add(PackageSpec(url="https://github.com/kahypar/KaHyPar.jl.git"))
 Pkg.test("KaHyPar")
 ```
+
+### macOS support
+
+Precompiled versions of [KaHyPar](https://github.com/SebastianSchlag/kahypar) are not available for macOS so to use KaHyPar.jl on macOS one must first
+build this package. Installing KaHyPar.jl then proceeds as above with the additional step of setting the `JULIA_KAHYPAR_LIBRARY_PATH` environment variable
+to point to the `lib` folder of this build.
+
+```julia
+using Pkg
+ENV["JULIA_KAHYPAR_LIBRARY_PATH"] = <build_root>/lib
+Pkg.add(PackageSpec(url="https://github.com/jalving/KaHyPar.jl.git"))
+Pkg.test("KaHyPar")
+```
