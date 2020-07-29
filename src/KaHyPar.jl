@@ -14,7 +14,7 @@ let depsfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
     end
 end
 
-const default_configuration = joinpath(@__DIR__,"config/cut_kahypar_mf_jea19.ini")
+const default_configuration = joinpath(@__DIR__,"config/cut_kKaHyPar_sea20.ini")
 
 # KaHyPar C API
 include("kahypar_h.jl")
@@ -75,7 +75,6 @@ end
 """
 partition(H, kparts;imbalance = 0.03, configuration = default_configuration) = partition(hypergraph(H), kparts,imbalance = imbalance, configuration = configuration)
 
-
 #Simple partition wrapper.  We create a new context, load the file, partition the hypergraph, and free the context.
 function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, configuration::Union{Symbol,String} = default_configuration)
 
@@ -85,9 +84,9 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, con
 
     if isa(configuration,Symbol)
         if configuration == :edge_cut
-            config_file =  joinpath(@__DIR__ ,"config/cut_kahypar_mf_jea19.ini")
+            config_file =  joinpath(@__DIR__ ,"config/cut_kKaHyPar_sea20.ini")
         elseif configuration == :connectivity
-            config_file =  joinpath(@__DIR__ ,"config/km1_kahypar_mf_jea19.ini")
+            config_file =  joinpath(@__DIR__ ,"config/km1_kKaHyPar_sea20.ini")
         else
             error("Unsupported configuration option given")
         end
@@ -122,7 +121,7 @@ function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vect
 end
 
 function set_target_block_weights(H::HyperGraph,block_weights::Vector{Int64})
-    @assert length(block_weights) <= H.n_vertices "Number of block weights ($(length(block_weights))) must be less than or equal to number of vertices ($(H.n_vertices)) "
+    @assert length(block_weights) <= H.n_vertices  "Number of block weights ($(length(block_weights))) must be less than or equal to number of vertices ($(H.n_vertices)) "
     @assert sum(block_weights) >= sum(H.v_weights) "Sum of individual part weights must be greater than sum of vertex weights"
 
     n_blocks = kahypar_hypernode_id_t(length(block_weights))

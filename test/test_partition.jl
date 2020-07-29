@@ -13,7 +13,7 @@ KaHyPar.partition(h,2,configuration = :edge_cut)
 
 KaHyPar.partition(h,2,configuration = :connectivity)
 
-KaHyPar.partition(h,2,configuration = joinpath(@__DIR__,"../src/config/km1_direct_kway_sea18.ini"))
+KaHyPar.partition(h,2,configuration = joinpath(@__DIR__,"../src/config/km1_rKaHyPar_sea20.ini"))
 
 
 true
