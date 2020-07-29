@@ -9,8 +9,9 @@ A = sparse(I,J,V)
 
 h = KaHyPar.HyperGraph(A)
 
-partition = KaHyPar.partition(h,2,configuration = :edge_cut)
+# KaHyPar.fix_vertices(h,3,[0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1])
+KaHyPar.fix_vertices(h,3,[-1,0,0,1,1,2,2])
 
-improved_partition = KaHyPar.improve_partition(h,2,partition,num_iterations = 1)
+KaHyPar.partition(h,3,configuration = :edge_cut,imbalance = 0.5)
 
 true

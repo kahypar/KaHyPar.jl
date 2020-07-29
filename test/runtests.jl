@@ -16,3 +16,6 @@ println("testing improve partition")
 
 println("testing custom block weights")
 @test include("test_set_target_weights.jl")
+
+println("testing fixed vertices")
+@test include("test_fix_vertices.jl")

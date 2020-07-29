@@ -30,8 +30,7 @@ function kahypar_context_free(context::Ref{kahypar_context_t})
     context)
 end
 
-function kahypar_set_custom_target_block_weights(num_blocks::kahypar_hypernode_id_t,
-    block_weights::Vector{kahypar_hypernode_weight_t},kahypar_context::Ref{kahypar_context_t})
+function kahypar_set_custom_target_block_weights(num_blocks::kahypar_hypernode_id_t,block_weights::Vector{kahypar_hypernode_weight_t},kahypar_context::Ref{kahypar_context_t})
     ccall((:kahypar_set_custom_target_block_weights,libkahypar),
     Cvoid,
     (kahypar_partition_id_t,Ptr{kahypar_hypernode_weight_t},Ptr{kahypar_context_t}),
@@ -40,7 +39,7 @@ function kahypar_set_custom_target_block_weights(num_blocks::kahypar_hypernode_i
     return
 end
 
-#Perform kahypar partitioning given hypergraph information
+#Perform kahypar partitioning given hypergraph information.
 function kahypar_partition(num_vertices, num_hyperedges, imbalance, num_blocks,
                           vertex_weights, hyperedge_weights, hyperedge_indices,
                           hyperedges, objective, context, partition)
@@ -109,16 +108,15 @@ function kahypar_improve_partition(num_vertices, num_hyperedges, imbalance, num_
 end
 
 #New interface functions that use a KaHyPar hypergraph type
-
-#reference to C hypergraph type
+#reference to the underlying C hypergraph type
 mutable struct kahypar_hypergraph_t
 end
 
-#create a hypergraph
+#create a KaHyPar hypergraph object
 function kahypar_create_hypergraph(num_blocks,num_vertices,num_hyperedges,hyperedge_indices,hyperedges,hyperedge_weights,vertex_weights)
       k_hypergraph = ccall((:kahypar_create_hypergraph,libkahypar),
           Ptr{kahypar_hypergraph_t},
-          (kahypar_partition_id_t,               #num blocks
+          (kahypar_partition_id_t,              #num blocks
           kahypar_hypernode_id_t,               #num vertices
           kahypar_hyperedge_id_t,               #num hyperedges
           Ptr{Csize_t},                         #hyperedge indices
@@ -130,7 +128,8 @@ function kahypar_create_hypergraph(num_blocks,num_vertices,num_hyperedges,hypere
           num_vertices,
           num_hyperedges,
           hyperedge_indices,
-          hyperedges,hyperedge_weights,
+          hyperedges,
+          hyperedge_weights,
           vertex_weights)
       return k_hypergraph
 end
@@ -177,7 +176,7 @@ function kahypar_set_fixed_vertices(k_hypergraph::Ref{kahypar_hypergraph_t},fixe
 end
 
 #improve a hypergraph partition
-function kahypar_improve_partition(k_hypergraph,num_blocks,imbalance,objective,context,input_partition,num_improvement_iterations,improved_partition)
+function kahypar_improve_hypergraph_partition(k_hypergraph,num_blocks,imbalance,objective,context,input_partition,num_improvement_iterations,improved_partition)
     ccall((:kahypar_improve_hypergraph_partition,libkahypar),
     Cvoid,
     (Ptr{kahypar_hypergraph_t},           #hypergraph

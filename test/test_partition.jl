@@ -7,7 +7,7 @@ V = Int.(ones(length(I)))
 
 A = sparse(I,J,V)
 
-h = KaHyPar.hypergraph(A)
+h = KaHyPar.HyperGraph(A)
 
 KaHyPar.partition(h,2,configuration = :edge_cut)
 

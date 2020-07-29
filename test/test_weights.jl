@@ -10,7 +10,7 @@ edge_weights = [1,2,2,1]
 
 A = sparse(I,J,V)
 
-h = KaHyPar.hypergraph(A,node_weights,edge_weights)
+h = KaHyPar.HyperGraph(A,node_weights,edge_weights)
 
 KaHyPar.partition(h,2,configuration = :edge_cut)
 
