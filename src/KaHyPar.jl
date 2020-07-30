@@ -19,7 +19,7 @@ const default_configuration = joinpath(@__DIR__,"config/cut_kKaHyPar_sea20.ini")
 # KaHyPar C API
 include("kahypar_h.jl")
 
-# Julia interface
+# Begin Julia interface
 """
     KaHyPar.HyperGraph
     Hypergraph structure based on hMetis manual.  The Julia structure contains references to an underlying KaHyPar context and KaHyPar hypergraph object.
@@ -32,17 +32,19 @@ mutable struct HyperGraph
     hyperedges::Vector{kahypar_hyperedge_id_t}
     v_weights::Vector{kahypar_hypernode_weight_t}
     e_weights::Vector{kahypar_hyperedge_weight_t}
+    config::Union{Nothing,String}
 end
 
+#Julia HyperGraph object constructor
 function HyperGraph(num_vertices,edge_indices,hyperedges,vertex_weights,edge_weights)
     context =  kahypar_context_new()
     num_edges = kahypar_hyperedge_id_t(length(edge_indices) - 1)
-    hypergraph = HyperGraph(context,nothing,num_vertices,edge_indices,hyperedges,vertex_weights,edge_weights)
+    hypergraph = HyperGraph(context,nothing,num_vertices,edge_indices,hyperedges,vertex_weights,edge_weights,nothing)
     return hypergraph
 end
 
 HyperGraph(num_vertices,edge_indices,hyperedges) = HyperGraph(num_vertices,edge_indices,hyperedges,kahypar_hypernode_weight_t.(ones(num_vertices)),
-kahypar_hyperedge_weight_t.(ones(length(edge_indices) - 1)))
+kahypar_hyperedge_weight_t.(ones(length(edge_indices) - 1)),nothing)
 
 """
 KaHyPar.HyperGraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weights::Vector{Int64})
@@ -89,7 +91,7 @@ end
 partition(H, kparts;imbalance = 0.03, configuration = default_configuration) = partition(HyperGraph(H), kparts,imbalance = imbalance, configuration = configuration)
 
 #Simple partition wrapper.  We create a new context, load the file, partition the hypergraph, and free the context.
-function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, configuration::Union{Symbol,String} = default_configuration)
+function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, configuration::Union{Nothing,Symbol,String} = nothing)
     objective = Cint(0)
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
     num_hyperedges = kahypar_hyperedge_id_t(length(H.edge_indices) - 1)
@@ -101,10 +103,13 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, con
         else
             error("Unsupported configuration option given")
         end
-    else
-        config_file = configuration
+        H.config = config_file
+    elseif isa(configuration,String)
+        H.config = configuration
+    elseif configuration == nothing && H.config == nothing
+        H.config = default_configuration
     end
-    kahypar_configure_context_from_file(H.context,config_file)
+    kahypar_configure_context_from_file(H.context,H.config)
     if H.k_hypergraph == nothing
         kahypar_partition(H.n_vertices, num_hyperedges, Cdouble(imbalance), kahypar_partition_id_t(kparts),H.v_weights, H.e_weights, H.edge_indices,H.hyperedges, objective, H.context, parts)
     else
@@ -114,11 +119,13 @@ function partition(H::HyperGraph, kparts::Integer; imbalance::Number = 0.03, con
     return Int.(parts)  #typecast result back to julia Integer
 end
 
-function load_INI_configuration(H::HyperGraph,config_file::String)
-    kahypar_configure_context_from_file(H.context,config_file)
+#Load a partitioning configuration from a file
+function set_config_file(H::HyperGraph,config_file::String)
+    H.config = config_file
     return nothing
 end
 
+#Improve an existing partition
 function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vector;num_iterations::Int64 = 10, imbalance::Number = 0.03)
     objective = Cint(0)
     parts = Vector{kahypar_partition_id_t}(undef, H.n_vertices)
@@ -127,7 +134,7 @@ function improve_partition(H::HyperGraph, kparts::Integer, input_partition::Vect
     if H.k_hypergraph == nothing
         kahypar_improve_partition(H.n_vertices,num_hyperedges,Cdouble(imbalance),kahypar_partition_id_t(kparts),
         H.v_weights, H.e_weights, H.edge_indices,H.hyperedges,input_partition,num_iterations,objective, H.context, parts)
-    else
+    else #we already have a hypergraph object
         kahypar_improve_hypergraph_partition(H.k_hypergraph,kahypar_partition_id_t(kparts),Cdouble(imbalance),objective,
         H.context,input_partition,num_iterations,parts)
     end

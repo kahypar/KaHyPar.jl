@@ -9,9 +9,13 @@ A = sparse(I,J,V)
 
 h = KaHyPar.HyperGraph(A)
 
-# KaHyPar.fix_vertices(h,3,[0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1])
-KaHyPar.fix_vertices(h,3,[-1,0,0,1,1,2,2])
+#Free the first 3 vertices in the hypergraph (denoted using -1).  Fix vertices to blocks 1 and 2
+KaHyPar.fix_vertices(h,3,[-1,-1,-1,1,1,2,2])
 
-KaHyPar.partition(h,3,configuration = :edge_cut,imbalance = 0.5)
+#Partition with fixed vertices
+partition = KaHyPar.partition(h,3,configuration = :edge_cut,imbalance = 0.1)
+
+#Improve partition with fixed vertices
+improved_partition = KaHyPar.improve_partition(h,3,partition,num_iterations = 10,imbalance = 0.1)
 
 true
