@@ -9,8 +9,8 @@ A = sparse(I,J,V)
 
 h = KaHyPar.HyperGraph(A)
 
-partition = KaHyPar.partition(h,2,configuration = :edge_cut)
+KaHyPar.set_config_file(h,"../src/config/km1_rKaHyPar_sea20.ini")
 
-improved_partition = KaHyPar.improve_partition(h,2,partition,num_iterations = 1)
+KaHyPar.partition(h,2)
 
 true

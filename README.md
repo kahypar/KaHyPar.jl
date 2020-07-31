@@ -11,10 +11,11 @@ KaHyPar.jl is a Julia interface to the [KaHyPar](https://github.com/SebastianSch
 
 
 ## Installation
+The Julia interface is not yet a registered package.  It can be installed and tested using the following commands in Julia.
 
 ```julia
 using Pkg
-Pkg.add(PackageSpec(url="https://github.com/jalving/KaHyPar.jl.git"))
+Pkg.add(PackageSpec(url="https://github.com/kahypar/KaHyPar.jl.git"))
 Pkg.test("KaHyPar")
 ```
 

@@ -7,7 +7,7 @@ V = Int.(ones(length(I)))
 
 A = sparse(I,J,V)
 
-h = KaHyPar.hypergraph(A)
+h = KaHyPar.HyperGraph(A)
 
 KaHyPar.set_target_block_weights(h,[5,3])
 
