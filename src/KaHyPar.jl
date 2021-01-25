@@ -46,6 +46,7 @@ end
 HyperGraph(num_vertices,edge_indices,hyperedges) = HyperGraph(num_vertices,edge_indices,hyperedges,kahypar_hypernode_weight_t.(ones(num_vertices)),
 kahypar_hyperedge_weight_t.(ones(length(edge_indices) - 1)),nothing)
 
+
 """
 KaHyPar.HyperGraph(A::SparseMatrixCSC,vertex_weights::Vector{Int64},edge_weights::Vector{Int64})
 Create Hypergraph from a sparse matrix representing the incidence matrix (rows are nodes, columns are edges)
@@ -76,10 +77,15 @@ end
 
 #Default weights are 1
 function HyperGraph(A::SparseMatrixCSC)
+    _check_structure(A) && warning("Incidence matrix contains an empty column (i.e. a hyperedge not connected to any vertices).  This might lead to a segmentation fault when partitioning.")
     N_v,N_e = size(A)
     vertex_weights = kahypar_hypernode_id_t.(ones(N_v))
     edge_weights = kahypar_hyperedge_id_t.(ones(N_e))
     return HyperGraph(A,vertex_weights,edge_weights)
+end
+
+function _check_structure(A::SparseMatrixCSC)
+    return any(sum(A,dims = 1) .== 0) #check whether any columns (hyperedges) are empty
 end
 
 @deprecate hypergraph HyperGraph
