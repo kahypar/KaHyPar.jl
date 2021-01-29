@@ -8,6 +8,6 @@ V = Int.(ones(length(I)))
 A = sparse(I,J,V)
 A[:,2] .= 0
 
-@test_logs (:warn,"Incidence matrix contains an empty column (i.e. a hyperedge not connected to any vertices).  This might lead to a segmentation fault when partitioning.")  h = KaHyPar.HyperGraph(A)
+@test_throws ErrorException("Incidence matrix contains an empty column (i.e. a hyperedge not connected to any vertices).  KaHyPar does not support empty hyperedges.")  h = KaHyPar.HyperGraph(A)
 
 true

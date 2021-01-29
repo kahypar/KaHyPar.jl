@@ -77,7 +77,7 @@ end
 
 #Default weights are 1
 function HyperGraph(A::SparseMatrixCSC)
-    _check_structure(A) && @warn("Incidence matrix contains an empty column (i.e. a hyperedge not connected to any vertices).  This might lead to a segmentation fault when partitioning.")
+    _check_structure(A) && error("Incidence matrix contains an empty column (i.e. a hyperedge not connected to any vertices).  KaHyPar does not support empty hyperedges.")
     N_v,N_e = size(A)
     vertex_weights = kahypar_hypernode_id_t.(ones(N_v))
     edge_weights = kahypar_hyperedge_id_t.(ones(N_e))
