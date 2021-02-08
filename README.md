@@ -21,8 +21,8 @@ Pkg.test("KaHyPar")
 
 ### macOS support
 
-Precompiled versions of [KaHyPar](https://github.com/SebastianSchlag/kahypar) are not available for macOS so to use KaHyPar.jl on macOS one must first
-build this package. Installing KaHyPar.jl then proceeds as above with the additional step of setting the `JULIA_KAHYPAR_LIBRARY_PATH` environment variable
+Precompiled versions of [KaHyPar](https://github.com/SebastianSchlag/kahypar) are not available for macOS so to use KaHyPar.jl on macOS [one must first
+follow the instructions to build this package](https://github.com/kahypar/kahypar#building-kahypar). Installing KaHyPar.jl then proceeds as above with the additional step of setting the `JULIA_KAHYPAR_LIBRARY_PATH` environment variable
 to point to the `lib` folder of this build.
 
 ```julia
