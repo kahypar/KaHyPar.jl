@@ -1,6 +1,5 @@
 name = "KaHyPar"
 uuid = "2a6221f6-aa48-11e9-3542-2d9e0ef01880"
-authors = ["Jordan Jalving <jhjalving@gmail.com>"]
 version = "0.1.0"
 
 [deps]
