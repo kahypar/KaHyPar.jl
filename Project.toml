@@ -1,6 +1,5 @@
 name = "KaHyPar"
 uuid = "2a6221f6-aa48-11e9-3542-2d9e0ef01880"
-authors = ["Jordan Jalving <jhjalving@gmail.com>"]
 version = "0.1.0"
 
 [deps]
@@ -11,6 +10,7 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [compat]
 julia = "1"
+BinaryProvider = "~0.5"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
