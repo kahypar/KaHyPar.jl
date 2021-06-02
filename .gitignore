@@ -16,3 +16,4 @@ deps/build\.log
 test/Project.toml
 test/Manifest.toml
 test/test_csv.csv
+.vscode
