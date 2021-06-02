@@ -27,15 +27,7 @@ KaHyPar is a &nbsp;
 pkg> add KaHyPar
 ```
 
-### macOS support
+## License
 
-Precompiled versions of [KaHyPar](https://github.com/SebastianSchlag/kahypar) are not available for macOS so to use KaHyPar.jl on macOS [one must first
-follow the instructions to build this package](https://github.com/kahypar/kahypar#building-kahypar). Installing KaHyPar.jl then proceeds as above with the additional step of setting the `JULIA_KAHYPAR_LIBRARY_PATH` environment variable
-to point to the `lib` folder of this build.
-
-```julia
-using Pkg
-ENV["JULIA_KAHYPAR_LIBRARY_PATH"] = <build_root>/lib
-Pkg.add(PackageSpec(url="https://github.com/jalving/KaHyPar.jl.git"))
-Pkg.test("KaHyPar")
-```
+This Julia wrapper package is released under MIT License.
+The KaHyPar C++ library is licensed with the GPL License.
