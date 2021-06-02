@@ -3,7 +3,7 @@
 [![CI](https://github.com/kahypar/KaHyPar.jl/workflows/CI/badge.svg)](https://github.com/kahypar/KaHyPar.jl/actions)
 [![codecov](https://codecov.io/gh/kahypar/KaHyPar.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kahypar/KaHyPar.jl)
 
-KaHyPar.jl is a Julia interface to the [KaHyPar](https://github.com/SebastianSchlag/kahypar) hypergraph partitioning package.
+KaHyPar.jl is a Julia interface to the [KaHyPar](https://github.com/kahypar/kahypar) hypergraph partitioning package.
 
 ## Hypergraphs and Hypergraph Partitioning
 -----------
