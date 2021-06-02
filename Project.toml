@@ -1,6 +1,6 @@
 name = "KaHyPar"
 uuid = "2a6221f6-aa48-11e9-3542-2d9e0ef01880"
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 KaHyPar_jll = "87a0c12d-51e1-52a8-b1ed-2b00825fe6a4"
