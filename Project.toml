@@ -3,14 +3,14 @@ uuid = "2a6221f6-aa48-11e9-3542-2d9e0ef01880"
 version = "0.1.0"
 
 [deps]
-BinaryProvider = "b99e7846-7c00-51b0-8f62-c81ae34c0232"
+KaHyPar_jll = "87a0c12d-51e1-52a8-b1ed-2b00825fe6a4"
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [compat]
+KaHyPar_jll = "1"
 julia = "1"
-BinaryProvider = "~0.5"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

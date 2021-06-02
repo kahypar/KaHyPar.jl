@@ -3,16 +3,7 @@ module KaHyPar
 using SparseArrays
 using LinearAlgebra
 using Libdl
-
-#Load libkahypar with BinaryProvider
-__init__() = check_deps()
-let depsfile = joinpath(@__DIR__, "..", "deps", "deps.jl")
-    if isfile(depsfile)
-        include(depsfile)
-    else
-        error("$(depsfile) does not exist, Please re-run Pkg.build(\"KaHyPar\"), and restart Julia.")
-    end
-end
+using KaHyPar_jll: libkahypar
 
 const default_configuration = joinpath(@__DIR__,"config/cut_kKaHyPar_sea20.ini")
 
