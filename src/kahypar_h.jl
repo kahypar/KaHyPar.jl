@@ -31,6 +31,11 @@ function kahypar_context_free(context::Ref{kahypar_context_t})
     context)
 end
 
+#Set seed
+function kahypar_set_seed(context::Ref{kahypar_context_t}, seed)
+    ccall((:kahypar_set_seed,libkahypar), Cvoid, (Ref{kahypar_context_t}, Cint), context, seed)
+end
+
 #Set custom block weights
 function kahypar_set_custom_target_block_weights(num_blocks::kahypar_hypernode_id_t,block_weights::Vector{kahypar_hypernode_weight_t},kahypar_context::Ref{kahypar_context_t})
     ccall((:kahypar_set_custom_target_block_weights,libkahypar),
@@ -109,6 +114,27 @@ function kahypar_improve_partition(num_vertices, num_hyperedges, imbalance, num_
     return
 end
 
+function kahypar_validate_input(num_vertices, num_hyperedges, hyperedge_indices, hyperedges, hyperedge_weights, vertex_weights, print_errors)
+    ccall((:kahypar_validate_input,libkahypar),
+        Cvoid,
+        (kahypar_hypernode_id_t,
+        kahypar_hyperedge_id_t,
+        Ref{Csize_t},
+        Ref{kahypar_hyperedge_id_t},
+        Ref{kahypar_hyperedge_weight_t},
+        Ref{kahypar_hypernode_weight_t},
+        Cint, # there is no Cbool type in Julia
+        ),
+        num_vertices,
+        num_hyperedges,
+        hyperedge_indices,
+        hyperedges,
+        hyperedge_weights,
+        vertex_weights,
+        print_errors,
+    )
+end
+
 ############################################################
 #New interface functions that use a KaHyPar hypergraph type
 #reference to the underlying C hypergraph type
@@ -145,6 +171,27 @@ function kahypar_create_hypergraph_from_file(filename::String,num_blocks::kahypa
       filename,
       num_blocks)
       return k_hypergraph
+end
+
+function kahypar_read_hypergraph_from_file(filename, num_vertices, num_hyperedges, hyperedge_indices, hyperedges, hyperedge_weights, vertex_weights)
+    ccall((:kahypar_read_hypergraph_from_file,libkahypar),
+        Cvoid,
+        (Cstring,
+        Ref{kahypar_hypernode_id_t},
+        Ref{kahypar_hyperedge_id_t},
+        Ptr{Ptr{Csize_t}},
+        Ptr{Ptr{kahypar_hyperedge_id_t}},
+        Ptr{Ptr{kahypar_hyperedge_weight_t}},
+        Ptr{Ptr{kahypar_hypernode_weight_t}},
+        ),
+        filename,
+        num_vertices,
+        num_hyperedges,
+        hyperedge_indices,
+        hyperedges,
+        hyperedge_weights,
+        vertex_weights,
+    )
 end
 
 #Partition a hypergraph object
