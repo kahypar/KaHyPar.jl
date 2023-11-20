@@ -47,7 +47,7 @@ A = sparse(I, J, V)
 # create a KaHyPar hypergraph
 h = KaHyPar.HyperGraph(A)
 
-# partition with default edge_cut configuration with maximum imbalance of 10%
+# partition with default edge-cut configuration with maximum imbalance of 10%
 KaHyPar.partition(h, 2; configuration=:edge_cut, imbalance=0.1)
 
 # partition with default connectivity configuration with maximum imbalance of 10%
@@ -57,7 +57,7 @@ KaHyPar.partition(h, 2; configuration=:connectivity, imbalance=0.1)
 Configuration files may also be used to define the partition options like the following snippet. Some 
 sample configuration files can be found [here](https://github.com/kahypar/KaHyPar.jl/tree/master/src/config).
 ```julia
-# partition with given configuration file (assumes file is in your path)
+# partition with given configuration filepath
 KaHyPar.partition(h, 2; configuration="km1_rKaHyPar_sea20.ini")
 ```
 
