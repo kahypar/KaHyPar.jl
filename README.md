@@ -52,9 +52,13 @@ KaHyPar.partition(h, 2; configuration=:edge_cut, imbalance=0.1)
 
 # partition with default connectivity configuration with maximum imbalance of 10%
 KaHyPar.partition(h, 2; configuration=:connectivity, imbalance=0.1)
+```
 
-# partition with given configuration file
-KaHyPar.partition(h, 2; configuration=joinpath(@__DIR__, "km1_rKaHyPar_sea20.ini"))
+Configuration files may also be used to define the partition options like the following snippet. Some 
+sample configuration files can be found [here](https://github.com/kahypar/KaHyPar.jl/tree/master/src/config).
+```julia
+# partition with given configuration file (assumes file is in your path)
+KaHyPar.partition(h, 2; configuration="km1_rKaHyPar_sea20.ini")
 ```
 
 It is also possible to partition with node and edge weights, set target block weights, set fixed vertices, or run improvement on existing partitions. The Julia API 
