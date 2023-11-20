@@ -27,6 +27,39 @@ KaHyPar is a &nbsp;
 pkg> add KaHyPar
 ```
 
+## Usage
+KaHyPar.jl natively accepts an incidence matrix as a Julia sparse matrix. 
+The following snippet shows how to define and partition a simple hypergraph that contains 7 vertices and 4 hyperedges.
+
+```julia
+using KaHyPar
+using SparseArrays
+
+# setup incidence matrix
+# I and J represent non-zero coordinates in the incidence matrix
+I = [1, 3, 1, 2, 4, 5, 4, 5, 7, 3, 6, 7]
+J = [1, 1, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4]
+V = Int.(ones(length(I))) # can technically be any non-zero value
+
+# create the incidence matrix
+A = sparse(I, J, V)
+
+# create a KaHyPar hypergraph
+h = KaHyPar.HyperGraph(A)
+
+# partition with default edge_cut configuration with maximum imbalance of 10%
+KaHyPar.partition(h, 2; configuration=:edge_cut, imbalance=0.1)
+
+# partition with default connectivity configuration with maximum imbalance of 10%
+KaHyPar.partition(h, 2; configuration=:connectivity, imbalance=0.1)
+
+# partition with given configuration file
+KaHyPar.partition(h, 2; configuration=joinpath(@__DIR__, "km1_rKaHyPar_sea20.ini"))
+```
+
+It is also possible to partition with node and edge weights, set target block weights, set fixed vertices, or run improvement on existing partitions. The Julia API 
+is not documented, but the [test files](https://github.com/kahypar/KaHyPar.jl/tree/master/test) show how to use the aforementioned features.
+
 ## License
 
 This Julia wrapper package is released under MIT License.
